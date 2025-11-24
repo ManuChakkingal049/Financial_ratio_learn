@@ -246,170 +246,6 @@ with tab1:
     with col2:
         st.markdown('<div class="formula-box">', unsafe_allow_html=True)
         st.markdown("**Formula:**")
-        st.code("ROE = Net Income ÷ Equity")
-        st.markdown(f"**Calculation:** {format_currency(net_income)} ÷ {format_currency(equity)} = **{roe:.2%}**")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="example-box">', unsafe_allow_html=True)
-    st.markdown("**💼 Real-Life Example:**")
-    st.markdown("""
-    You invest $100,000 of your own money (equity) to start a business. At year-end, the business made $15,000 profit.
-    
-    **ROE = $15,000 ÷ $100,000 = 15%**
-    
-    You earned 15% return on your investment. Compare this to:
-    - Savings account: ~4% return
-    - Stock market average: ~10% return
-    - Your business: 15% return ✓
-    
-    **With Leverage:** If you borrowed $50,000 and only invested $50,000 of your own money (still $100,000 total assets), and made the same $15,000 profit:
-    - ROE = $15,000 ÷ $50,000 = **30%** (doubled!)
-    
-    This shows the power (and risk) of leverage. Same profit, but higher return on YOUR money because you used other people's money (debt) too.
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="interpretation-box">', unsafe_allow_html=True)
-    st.markdown("**📖 How to Interpret:**")
-    st.markdown(f"""
-    - **Your ROE: {roe:.2%}**
-    - **> 15%:** Excellent - Strong returns for shareholders
-    - **10% - 15%:** Good - Competitive returns
-    - **< 10%:** Low - May not be worth the risk vs. safer investments
-    
-    **Why it matters:** This is THE number shareholders care about most. It tells them: "For every dollar I invested, how much profit did you generate?" Higher ROE attracts investors.
-    
-    **The Relationship:** ROE is always ≥ ROA when using debt. Debt amplifies returns (and losses).
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Profitability Visualization
-    st.markdown("### 📊 Profitability Cascade")
-    
-    # Waterfall chart showing profit margins
-    fig = go.Figure(go.Waterfall(
-        name = "Profitability", orientation = "v",
-        measure = ["relative", "relative", "relative", "total"],
-        x = ["Gross Margin", "Operating Margin", "Net Margin", "Final"],
-        y = [gross_margin*100, (operating_margin-gross_margin)*100, (net_margin-operating_margin)*100, net_margin*100],
-        connector = {"line":{"color":"rgb(63, 63, 63)"}},
-    ))
-    fig.update_layout(title = "Profitability Margins (%)", showlegend = False, height=400)
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Bar chart for ROA and ROE
-    fig2 = go.Figure(data=[
-        go.Bar(name='ROA', x=['Return on Assets'], y=[roa*100], marker_color='lightblue'),
-        go.Bar(name='ROE', x=['Return on Equity'], y=[roe*100], marker_color='lightgreen')
-    ])
-    fig2.update_layout(title="Returns Comparison (%)", yaxis_title="Return (%)", showlegend=True, height=400)
-    st.plotly_chart(fig2, use_container_width=True)
-    
-    st.markdown('<div class="interpretation-box">', unsafe_allow_html=True)
-    st.markdown("**🎯 Summary of Profitability Ratios:**")
-    st.markdown(f"""
-    | Ratio | Your Value | What It Tells You |
-    |-------|-----------|-------------------|
-    | Gross Margin | {gross_margin:.1%} | {gross_margin*100:.1f}% left after making/buying products |
-    | Operating Margin | {operating_margin:.1%} | {operating_margin*100:.1f}% left after running the business |
-    | Net Margin | {net_margin:.1%} | {net_margin*100:.1f}% final profit per dollar of sales |
-    | ROA | {roa:.1%} | ${roa*100:.1f} profit per $100 of assets |
-    | ROE | {roe:.1%} | ${roe*100:.1f} profit per $100 invested by owners |
-    
-    **Key Insight:** Compare these ratios to competitors in your industry. A 5% net margin might be excellent for a grocery store but terrible for a software company!
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# ---------------------------
-# Summary Dashboard
-# ---------------------------
-st.markdown("---")
-st.header("📈 Complete Financial Dashboard")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("### 💧 Liquidity")
-    st.metric("Current Ratio", f"{current_ratio:.2f}", 
-              delta="Healthy" if current_ratio >= 1.5 else "Acceptable" if current_ratio >= 1 else "Warning",
-              delta_color="normal" if current_ratio >= 1 else "inverse")
-    st.metric("Quick Ratio", f"{quick_ratio:.2f}",
-              delta="Good" if quick_ratio >= 1 else "Low",
-              delta_color="normal" if quick_ratio >= 1 else "inverse")
-
-with col2:
-    st.markdown("### ⚖️ Leverage")
-    st.metric("Debt/Equity", f"{debt_to_equity:.2f}",
-              delta="Conservative" if debt_to_equity < 1 else "Moderate" if debt_to_equity < 2 else "High")
-    st.metric("Debt/Assets", f"{debt_to_assets:.1%}",
-              delta=f"{(1-debt_to_assets)*100:.0f}% owned")
-
-with col3:
-    st.markdown("### 💰 Profitability")
-    st.metric("Net Margin", f"{net_margin:.1%}",
-              delta=f"${net_margin*revenue:,.0f} profit")
-    st.metric("ROE", f"{roe:.1%}",
-              delta="Shareholder return")
-
-# Quick Health Check
-st.markdown("### 🏥 Financial Health Check")
-
-health_score = 0
-health_messages = []
-
-if current_ratio >= 1.5:
-    health_score += 25
-    health_messages.append("✅ Strong liquidity position")
-elif current_ratio >= 1:
-    health_score += 15
-    health_messages.append("⚠️ Adequate liquidity")
-else:
-    health_messages.append("❌ Liquidity concerns")
-
-if debt_to_equity < 1:
-    health_score += 25
-    health_messages.append("✅ Conservative debt levels")
-elif debt_to_equity < 2:
-    health_score += 15
-    health_messages.append("⚠️ Moderate debt levels")
-else:
-    health_messages.append("❌ High debt risk")
-
-if net_margin > 0.1:
-    health_score += 25
-    health_messages.append("✅ Healthy profit margins")
-elif net_margin > 0:
-    health_score += 15
-    health_messages.append("⚠️ Thin profit margins")
-else:
-    health_messages.append("❌ Operating at a loss")
-
-if roe > 0.15:
-    health_score += 25
-    health_messages.append("✅ Excellent returns for shareholders")
-elif roe > 0.10:
-    health_score += 15
-    health_messages.append("⚠️ Moderate returns for shareholders")
-else:
-    health_messages.append("❌ Poor shareholder returns")
-
-st.progress(health_score / 100)
-st.markdown(f"**Overall Health Score: {health_score}/100**")
-for msg in health_messages:
-    st.markdown(msg)
-
-st.markdown("---")
-st.markdown("### 💡 Pro Tip")
-st.info("""
-**Remember the Context:** Financial ratios don't exist in a vacuum!
-- Compare against **industry benchmarks** (retail vs. tech vs. manufacturing have very different "normal" ratios)
-- Track **trends over time** (is your liquidity improving or declining?)
-- Consider **business lifecycle** (startups often have negative profitability while growing, mature companies should be profitable)
-- Read **the full story** (great ratios with declining sales might hide problems, "poor" ratios might be strategic investments)
-
-**Use this tool to:** Experiment with different scenarios, understand trade-offs (debt vs. equity), and build financial intuition!
-""")formula-box">', unsafe_allow_html=True)
-        st.markdown("**Formula:**")
         st.code("Current Ratio = Current Assets ÷ Current Liabilities")
         st.markdown(f"**Calculation:** {format_currency(current_assets)} ÷ {format_currency(current_liabilities)} = **{current_ratio:.2f}**")
         st.markdown('</div>', unsafe_allow_html=True)
@@ -460,16 +296,19 @@ st.info("""
         st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown('<div class="example-box">', unsafe_allow_html=True)
-    st.markdown("**🏪 Real-Life Example:**")
+    st.markdown("**🏪 Real-Life Example (continued):**")
     st.markdown("""
-    Using the same coffee shop: You have $15,000 in current assets, but $5,000 is tied up in coffee beans (inventory). 
-    If you needed to pay all your debts TODAY, you couldn't instantly sell all your beans.
+    After making $12 gross profit per pizza, you still have to pay:
+    - Rent: $3 per pizza
+    - Wages for cashier: $2 per pizza
+    - Marketing: $1 per pizza
+    - Utilities: $1 per pizza
+    **Total Operating Expenses = $7 per pizza**
     
-    **Quick Ratio = ($15,000 - $5,000) ÷ $10,000 = 1.0**
+    **Operating Income = $12 - $7 = $5 per pizza**
+    **Operating Margin = $5 ÷ $20 = 25 percent**
     
-    You have exactly $10,000 in "liquid" assets (cash and receivables) to pay $10,000 in debts. This is the bare minimum.
-    
-    **Why exclude inventory?** Inventory takes time to sell. In an emergency, you need cash NOW, not coffee beans you still need to sell.
+    Now you're down to $5 (25 percent) from that $20 pizza, BEFORE paying interest on loans or taxes.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -572,11 +411,11 @@ with tab2:
     st.markdown("""
     You start a delivery business. You buy 10 vans for $200,000 total:
     
-    **Option A:** Pay $200,000 cash (100% equity financed)
-    - Debt to Assets = $0 ÷ $200,000 = **0%**
+    **Option A:** Pay $200,000 cash (100 percent equity financed)
+    - Debt to Assets = $0 ÷ $200,000 = **0 percent**
     
-    **Option B:** Pay $50,000 down, finance $150,000 (75% debt financed)
-    - Debt to Assets = $150,000 ÷ $200,000 = **75%**
+    **Option B:** Pay $50,000 down, finance $150,000 (75 percent debt financed)
+    - Debt to Assets = $150,000 ÷ $200,000 = **75 percent**
     
     Option A is safer (no debt risk) but ties up all your cash.
     Option B preserves cash for operations but requires regular loan payments regardless of how business is doing.
@@ -587,11 +426,11 @@ with tab2:
     st.markdown("**📖 How to Interpret:**")
     st.markdown(f"""
     - **Your Ratio: {debt_to_assets:.2%}**
-    - **< 30%:** Very safe - Most assets are owned outright
-    - **30% - 60%:** Moderate - Balanced financing
-    - **> 60%:** High leverage - Most assets are financed by debt
+    - **< 30 percent:** Very safe - Most assets are owned outright
+    - **30 - 60 percent:** Moderate - Balanced financing
+    - **> 60 percent:** High leverage - Most assets are financed by debt
     
-    **Why it matters:** Shows what percentage of your assets would need to be sold to pay off all debts. Lower is safer. If you have 70% debt-to-assets and asset values drop, you could be underwater (owe more than you own).
+    **Why it matters:** Shows what percentage of your assets would need to be sold to pay off all debts. Lower is safer. If you have 70 percent debt-to-assets and asset values drop, you could be underwater (owe more than you own).
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -637,11 +476,11 @@ with tab3:
     st.markdown("""
     You run a pizza shop. You sell a pizza for $20 (revenue). The ingredients and labor to make it cost $8 (COGS).
     
-    **Gross Margin = ($20 - $8) ÷ $20 = 60%**
+    **Gross Margin = ($20 - $8) ÷ $20 = 60 percent**
     
-    This means for every $20 pizza sold, you keep $12 (60%) to cover rent, marketing, utilities, and profit. The other $8 (40%) went to make the pizza.
+    This means for every $20 pizza sold, you keep $12 (60 percent) to cover rent, marketing, utilities, and profit. The other $8 (40 percent) went to make the pizza.
     
-    **Why it matters:** If your gross margin is too low, you won't have enough left over to pay other expenses. A 20% gross margin means you only have $4 from that $20 pizza to pay for EVERYTHING else - probably not sustainable.
+    **Why it matters:** If your gross margin is too low, you won't have enough left over to pay other expenses. A 20 percent gross margin means you only have $4 from that $20 pizza to pay for EVERYTHING else - probably not sustainable.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -666,17 +505,14 @@ with tab3:
     st.markdown('<div class="example-box">', unsafe_allow_html=True)
     st.markdown("**🍕 Real-Life Example (continued):**")
     st.markdown("""
-    After making $12 gross profit per pizza, you still have to pay:
-    - Rent: $3 per pizza
-    - Wages for cashier: $2 per pizza
-    - Marketing: $1 per pizza
-    - Utilities: $1 per pizza
-    **Total Operating Expenses = $7 per pizza**
+    Using the same coffee shop: You have $15,000 in current assets, but $5,000 is tied up in coffee beans (inventory). 
+    If you needed to pay all your debts TODAY, you couldn't instantly sell all your beans.
     
-    **Operating Income = $12 - $7 = $5 per pizza**
-    **Operating Margin = $5 ÷ $20 = 25%**
+    **Quick Ratio = ($15,000 - $5,000) ÷ $10,000 = 1.0**
     
-    Now you're down to $5 (25%) from that $20 pizza, BEFORE paying interest on loans or taxes.
+    You have exactly $10,000 in "liquid" assets (cash and receivables) to pay $10,000 in debts. This is the bare minimum.
+    
+    **Why exclude inventory?** Inventory takes time to sell. In an emergency, you need cash NOW, not coffee beans you still need to sell.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -706,11 +542,11 @@ with tab3:
     - Income taxes: $1.00
     
     **Net Income = $5 - $1.50 - $1.00 = $2.50 per pizza**
-    **Net Margin = $2.50 ÷ $20 = 12.5%**
+    **Net Margin = $2.50 ÷ $20 = 12.5 percent**
     
     Out of every $20 pizza, you finally keep $2.50 as actual profit. This is what you can reinvest in the business or take home.
     
-    **The Cascade:** Revenue (100%) → Gross Profit (60%) → Operating Income (25%) → Net Income (12.5%)
+    **The Cascade:** Revenue (100 percent) → Gross Profit (60 percent) → Operating Income (25 percent) → Net Income (12.5 percent)
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -736,10 +572,10 @@ with tab3:
     st.markdown("**🏭 Real-Life Example:**")
     st.markdown("""
     **Company A (Capital Intensive):** Manufacturing plant with $10 million in equipment makes $500,000 profit
-    - ROA = $500,000 ÷ $10,000,000 = **5%**
+    - ROA = $500,000 ÷ $10,000,000 = **5 percent**
     
     **Company B (Asset Light):** Software company with $1 million in assets makes $200,000 profit
-    - ROA = $200,000 ÷ $1,000,000 = **20%**
+    - ROA = $200,000 ÷ $1,000,000 = **20 percent**
     
     Company B generates more profit per dollar of assets - more efficient use of resources. This is why tech companies often have higher ROAs than manufacturing.
     
@@ -759,4 +595,169 @@ with tab3:
         st.markdown("**Return to shareholders**")
     
     with col2:
-        st.markdown('<div class="
+        st.markdown('<div class="formula-box">', unsafe_allow_html=True)
+        st.markdown("**Formula:**")
+        st.code("ROE = Net Income ÷ Equity")
+        st.markdown(f"**Calculation:** {format_currency(net_income)} ÷ {format_currency(equity)} = **{roe:.2%}**")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="example-box">', unsafe_allow_html=True)
+    st.markdown("**💼 Real-Life Example:**")
+    st.markdown("""
+    You invest $100,000 of your own money (equity) to start a business. At year-end, the business made $15,000 profit.
+    
+    **ROE = $15,000 ÷ $100,000 = 15 percent**
+    
+    You earned 15 percent return on your investment. Compare this to:
+    - Savings account: about 4 percent return
+    - Stock market average: about 10 percent return
+    - Your business: 15 percent return (good!)
+    
+    **With Leverage:** If you borrowed $50,000 and only invested $50,000 of your own money (still $100,000 total assets), and made the same $15,000 profit:
+    - ROE = $15,000 ÷ $50,000 = **30 percent** (doubled!)
+    
+    This shows the power (and risk) of leverage. Same profit, but higher return on YOUR money because you used other people's money (debt) too.
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="interpretation-box">', unsafe_allow_html=True)
+    st.markdown("**📖 How to Interpret:**")
+    st.markdown(f"""
+    - **Your ROE: {roe:.2%}**
+    - **> 15 percent:** Excellent - Strong returns for shareholders
+    - **10 - 15 percent:** Good - Competitive returns
+    - **< 10 percent:** Low - May not be worth the risk vs. safer investments
+    
+    **Why it matters:** This is THE number shareholders care about most. It tells them: "For every dollar I invested, how much profit did you generate?" Higher ROE attracts investors.
+    
+    **The Relationship:** ROE is always equal to or greater than ROA when using debt. Debt amplifies returns (and losses).
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Profitability Visualization
+    st.markdown("### 📊 Profitability Cascade")
+    
+    # Waterfall chart showing profit margins
+    fig = go.Figure(go.Waterfall(
+        name = "Profitability", orientation = "v",
+        measure = ["relative", "relative", "relative", "total"],
+        x = ["Gross Margin", "Operating Margin", "Net Margin", "Final"],
+        y = [gross_margin*100, (operating_margin-gross_margin)*100, (net_margin-operating_margin)*100, net_margin*100],
+        connector = {"line":{"color":"rgb(63, 63, 63)"}},
+    ))
+    fig.update_layout(title = "Profitability Margins (%)", showlegend = False, height=400)
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Bar chart for ROA and ROE
+    fig2 = go.Figure(data=[
+        go.Bar(name='ROA', x=['Return on Assets'], y=[roa*100], marker_color='lightblue'),
+        go.Bar(name='ROE', x=['Return on Equity'], y=[roe*100], marker_color='lightgreen')
+    ])
+    fig2.update_layout(title="Returns Comparison (%)", yaxis_title="Return (%)", showlegend=True, height=400)
+    st.plotly_chart(fig2, use_container_width=True)
+    
+    st.markdown('<div class="interpretation-box">', unsafe_allow_html=True)
+    st.markdown("**🎯 Summary of Profitability Ratios:**")
+    summary_text = f"""
+| Ratio | Your Value | What It Tells You |
+|-------|-----------|-------------------|
+| Gross Margin | {gross_margin:.1%} | {gross_margin*100:.1f} percent left after making/buying products |
+| Operating Margin | {operating_margin:.1%} | {operating_margin*100:.1f} percent left after running the business |
+| Net Margin | {net_margin:.1%} | {net_margin*100:.1f} percent final profit per dollar of sales |
+| ROA | {roa:.1%} | {roa*100:.1f} dollars profit per 100 dollars of assets |
+| ROE | {roe:.1%} | {roe*100:.1f} dollars profit per 100 dollars invested by owners |
+
+**Key Insight:** Compare these ratios to competitors in your industry. A 5 percent net margin might be excellent for a grocery store but terrible for a software company!
+    """
+    st.markdown(summary_text)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------------------
+# Summary Dashboard
+# ---------------------------
+st.markdown("---")
+st.header("📈 Complete Financial Dashboard")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("### 💧 Liquidity")
+    st.metric("Current Ratio", f"{current_ratio:.2f}", 
+              delta="Healthy" if current_ratio >= 1.5 else "Acceptable" if current_ratio >= 1 else "Warning",
+              delta_color="normal" if current_ratio >= 1 else "inverse")
+    st.metric("Quick Ratio", f"{quick_ratio:.2f}",
+              delta="Good" if quick_ratio >= 1 else "Low",
+              delta_color="normal" if quick_ratio >= 1 else "inverse")
+
+with col2:
+    st.markdown("### ⚖️ Leverage")
+    st.metric("Debt/Equity", f"{debt_to_equity:.2f}",
+              delta="Conservative" if debt_to_equity < 1 else "Moderate" if debt_to_equity < 2 else "High")
+    st.metric("Debt/Assets", f"{debt_to_assets:.1%}",
+              delta=f"{(1-debt_to_assets)*100:.0f} percent owned")
+
+with col3:
+    st.markdown("### 💰 Profitability")
+    st.metric("Net Margin", f"{net_margin:.1%}",
+              delta=f"${net_margin*revenue:,.0f} profit")
+    st.metric("ROE", f"{roe:.1%}",
+              delta="Shareholder return")
+
+# Quick Health Check
+st.markdown("### 🏥 Financial Health Check")
+
+health_score = 0
+health_messages = []
+
+if current_ratio >= 1.5:
+    health_score += 25
+    health_messages.append("✅ Strong liquidity position")
+elif current_ratio >= 1:
+    health_score += 15
+    health_messages.append("⚠️ Adequate liquidity")
+else:
+    health_messages.append("❌ Liquidity concerns")
+
+if debt_to_equity < 1:
+    health_score += 25
+    health_messages.append("✅ Conservative debt levels")
+elif debt_to_equity < 2:
+    health_score += 15
+    health_messages.append("⚠️ Moderate debt levels")
+else:
+    health_messages.append("❌ High debt risk")
+
+if net_margin > 0.1:
+    health_score += 25
+    health_messages.append("✅ Healthy profit margins")
+elif net_margin > 0:
+    health_score += 15
+    health_messages.append("⚠️ Thin profit margins")
+else:
+    health_messages.append("❌ Operating at a loss")
+
+if roe > 0.15:
+    health_score += 25
+    health_messages.append("✅ Excellent returns for shareholders")
+elif roe > 0.10:
+    health_score += 15
+    health_messages.append("⚠️ Moderate returns for shareholders")
+else:
+    health_messages.append("❌ Poor shareholder returns")
+
+st.progress(health_score / 100)
+st.markdown(f"**Overall Health Score: {health_score}/100**")
+for msg in health_messages:
+    st.markdown(msg)
+
+st.markdown("---")
+st.markdown("### 💡 Pro Tip")
+st.info("""
+**Remember the Context:** Financial ratios don't exist in a vacuum!
+- Compare against **industry benchmarks** (retail vs. tech vs. manufacturing have very different "normal" ratios)
+- Track **trends over time** (is your liquidity improving or declining?)
+- Consider **business lifecycle** (startups often have negative profitability while growing, mature companies should be profitable)
+- Read **the full story** (great ratios with declining sales might hide problems, "poor" ratios might be strategic investments)
+
+**Use this tool to:** Experiment with different scenarios, understand trade-offs (debt vs. equity), and build financial intuition!
+""")
