@@ -305,22 +305,25 @@ elif "Challenge Mode" in mode:
             st.markdown("### 🏭 Challenge 1: The Missing Equipment")
             st.markdown("""
             <div class="tip-box">
-            <b>Scenario:</b> A manufacturing company bought new machinery worth $100,000 but forgot to record it! 
-            The balance sheet shows they paid cash for it, but the equipment isn't listed in assets.
+            <b>Scenario:</b> A manufacturing company bought new machinery worth $100,000 in cash but forgot to record the equipment! 
+            They recorded spending the cash, but didn't add the equipment asset.
             
             <b>Your task:</b> Add the equipment to fix the balance!
             </div>
             """, unsafe_allow_html=True)
             
             # Pre-filled values (unbalanced - missing equipment)
-            cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c1_cash", disabled=True,
-                                     help="This already reflects the $100k spent on equipment")
-            inventory_c = st.number_input("Inventory", value=200000.0, step=5000.0, key="c1_inv", disabled=True)
+            # The problem: Cash shows they spent it, but equipment not recorded
+            # Assets = $300k (should be $400k with equipment)
+            # Liabilities + Equity = $400k
+            cash_c = st.number_input("Cash", value=200000.0, step=5000.0, key="c1_cash", disabled=True,
+                                     help="Cash after buying equipment")
+            inventory_c = st.number_input("Inventory", value=100000.0, step=5000.0, key="c1_inv", disabled=True)
             ppe_c = st.number_input("⭐ Equipment (Fix this!)", value=0.0, step=5000.0, key="c1_ppe", 
                                    help="Hint: They bought $100k worth of equipment!")
             
-            liabilities_c = st.number_input("Total Liabilities", value=100000.0, step=5000.0, key="c1_liab", disabled=True)
-            equity_c = st.number_input("Total Equity", value=200000.0, step=5000.0, key="c1_eq", disabled=True)
+            liabilities_c = st.number_input("Total Liabilities", value=150000.0, step=5000.0, key="c1_liab", disabled=True)
+            equity_c = st.number_input("Total Equity", value=250000.0, step=5000.0, key="c1_eq", disabled=True)
             
             total_assets_c = cash_c + inventory_c + ppe_c
             total_liab_eq_c = liabilities_c + equity_c
@@ -328,27 +331,31 @@ elif "Challenge Mode" in mode:
             if check_balance(total_assets_c, liabilities_c, equity_c):
                 st.success("🎉 CHALLENGE COMPLETE! You fixed the balance sheet!")
                 st.balloons()
-                st.markdown("**Explanation:** The company spent $100k cash on equipment. Assets stayed the same (cash went down $100k, equipment went up $100k), so the balance sheet stays balanced!")
+                st.markdown("**Explanation:** The company bought equipment for $100k. Even though cash decreased when they paid, the equipment is still an asset that must be recorded. Now Assets ($400k) = Liabilities + Equity ($400k)!")
             else:
-                st.warning(f"Not quite! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
+                st.warning(f"⚠️ NOT BALANCED! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
                 st.info("💡 Hint: The equipment costs $100,000. What should you add to the Equipment line?")
+                st.markdown(f"**Current Status:** Assets = {format_currency(total_assets_c)} | Liabilities + Equity = {format_currency(total_liab_eq_c)}")
         
         elif "Challenge 2" in st.session_state.game_mode:
             st.markdown("### 💰 Challenge 2: The Forgotten Loan")
             st.markdown("""
             <div class="tip-box">
-            <b>Scenario:</b> A retail store took out a $150,000 bank loan to buy inventory, 
+            <b>Scenario:</b> A retail store took out a $150,000 bank loan and used it to buy inventory, 
             but the accountant forgot to record the loan on the balance sheet!
             
             <b>Your task:</b> Add the missing loan to balance the books!
             </div>
             """, unsafe_allow_html=True)
             
+            # The problem: Inventory increased by $150k but loan wasn't recorded
+            # Assets = $500k (includes the new inventory)
+            # Liabilities + Equity = $350k (missing the $150k loan)
             cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c2_cash", disabled=True)
             inventory_c = st.number_input("Inventory", value=400000.0, step=5000.0, key="c2_inv", disabled=True,
                                          help="This includes the $150k worth they bought with the loan")
             
-            liabilities_c = st.number_input("⭐ Total Liabilities (Fix this!)", value=200000.0, step=5000.0, key="c2_liab",
+            liabilities_c = st.number_input("⭐ Total Liabilities (Fix this!)", value=50000.0, step=5000.0, key="c2_liab",
                                            help="Hint: They took a $150k loan!")
             equity_c = st.number_input("Total Equity", value=300000.0, step=5000.0, key="c2_eq", disabled=True)
             
@@ -358,10 +365,11 @@ elif "Challenge Mode" in mode:
             if check_balance(total_assets_c, liabilities_c, equity_c):
                 st.success("🎉 CHALLENGE COMPLETE! You found the missing loan!")
                 st.balloons()
-                st.markdown("**Explanation:** The loan increased inventory (asset) by $150k AND increased liabilities by $150k. Both sides go up equally, keeping it balanced!")
+                st.markdown("**Explanation:** The loan increased inventory (asset) by $150k AND increased liabilities by $150k. Both sides go up equally, keeping it balanced! Now Assets ($500k) = Liabilities + Equity ($500k)!")
             else:
-                st.warning(f"Not quite! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
-                st.info("💡 Hint: They borrowed $150,000. This should be added to liabilities!")
+                st.warning(f"⚠️ NOT BALANCED! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
+                st.info("💡 Hint: They borrowed $150,000. Add this to the current liabilities!")
+                st.markdown(f"**Current Status:** Assets = {format_currency(total_assets_c)} | Liabilities + Equity = {format_currency(total_liab_eq_c)}")
         
         elif "Challenge 3" in st.session_state.game_mode:
             st.markdown("### 👥 Challenge 3: The Equity Mystery")
@@ -374,6 +382,9 @@ elif "Challenge Mode" in mode:
             </div>
             """, unsafe_allow_html=True)
             
+            # The problem: Cash increased by $80k but equity wasn't updated
+            # Assets = $400k (includes the $80k new cash)
+            # Liabilities + Equity = $320k (missing the $80k equity increase)
             cash_c = st.number_input("Cash", value=280000.0, step=5000.0, key="c3_cash", disabled=True,
                                     help="This includes the $80k investment")
             inventory_c = st.number_input("Inventory", value=120000.0, step=5000.0, key="c3_inv", disabled=True)
@@ -388,10 +399,11 @@ elif "Challenge Mode" in mode:
             if check_balance(total_assets_c, liabilities_c, equity_c):
                 st.success("🎉 CHALLENGE COMPLETE! The equity is now correct!")
                 st.balloons()
-                st.markdown("**Explanation:** When the owner invests money, cash (asset) goes up by $80k AND equity goes up by $80k. The owner now has a bigger stake in the business!")
+                st.markdown("**Explanation:** When the owner invests money, cash (asset) goes up by $80k AND equity goes up by $80k. The owner now has a bigger stake in the business! Now Assets ($400k) = Liabilities + Equity ($400k)!")
             else:
-                st.warning(f"Not quite! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
+                st.warning(f"⚠️ NOT BALANCED! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
                 st.info("💡 Hint: The original equity was $170k. The owner added $80k. What's the new equity?")
+                st.markdown(f"**Current Status:** Assets = {format_currency(total_assets_c)} | Liabilities + Equity = {format_currency(total_liab_eq_c)}")
         
         elif "Challenge 4" in st.session_state.game_mode:
             st.markdown("### 💵 Challenge 4: The Cash Crisis")
@@ -404,6 +416,9 @@ elif "Challenge Mode" in mode:
             </div>
             """, unsafe_allow_html=True)
             
+            # The problem: Liabilities decreased by $60k but cash wasn't reduced
+            # Assets = $400k (cash should be reduced by $60k)
+            # Liabilities + Equity = $340k (already reduced by $60k)
             cash_c = st.number_input("⭐ Cash (Fix this!)", value=250000.0, step=5000.0, key="c4_cash",
                                     help="Hint: They paid $60k in cash to reduce debt!")
             inventory_c = st.number_input("Inventory", value=150000.0, step=5000.0, key="c4_inv", disabled=True)
@@ -418,10 +433,11 @@ elif "Challenge Mode" in mode:
             if check_balance(total_assets_c, liabilities_c, equity_c):
                 st.success("🎉 CHALLENGE COMPLETE! Cash is now correctly recorded!")
                 st.balloons()
-                st.markdown("**Explanation:** Paying off debt reduces cash (asset) by $60k AND reduces liabilities by $60k. Both sides decrease equally!")
+                st.markdown("**Explanation:** Paying off debt reduces cash (asset) by $60k AND reduces liabilities by $60k. Both sides decrease equally! Now Assets ($340k) = Liabilities + Equity ($340k)!")
             else:
-                st.warning(f"Not quite! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
-                st.info("💡 Hint: They paid $60,000 in cash. The original cash was $250k. What should it be now?")
+                st.warning(f"⚠️ NOT BALANCED! Difference: {format_currency(abs(total_assets_c - total_liab_eq_c))}")
+                st.info("💡 Hint: They paid $60,000 in cash. Reduce the cash by this amount!")
+                st.markdown(f"**Current Status:** Assets = {format_currency(total_assets_c)} | Liabilities + Equity = {format_currency(total_liab_eq_c)}")
 
         # Show current balance status
         st.markdown("---")
