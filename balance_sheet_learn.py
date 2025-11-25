@@ -451,7 +451,7 @@ elif "Real-World" in mode:
         "💻 Launching a Tech Startup",
         "🏪 Opening a Retail Store"
     ])
-    
+
     if "Pizza Restaurant" in scenario:
         st.markdown("### 🍕 Opening a Pizza Restaurant: Step-by-Step")
         
@@ -539,6 +539,294 @@ elif "Real-World" in mode:
         ])
         fig.update_layout(title='Balance Sheet Breakdown', barmode='group', height=400)
         st.plotly_chart(fig, use_container_width=True)
+    
+    elif "Delivery Service" in scenario:
+        st.markdown("### 🚗 Starting a Delivery Service: Step-by-Step")
+        
+        step = st.slider("Follow the journey:", 1, 6, 1)
+        
+        # Initialize values
+        cash = 0
+        vehicles = 0
+        equipment = 0
+        debt = 0
+        equity = 0
+        receivables = 0
+        payables = 0
+        
+        if step >= 1:
+            st.markdown("#### Step 1: Initial Investment")
+            st.info("You invest $150,000 of your savings to start the delivery business")
+            cash += 150000
+            equity += 150000
+            st.success("✅ Cash +$150k (Asset) | Equity +$150k")
+        
+        if step >= 2:
+            st.markdown("#### Step 2: Finance Delivery Vehicles")
+            st.info("You buy 3 delivery vans worth $120,000 with a $90,000 auto loan (pay $30k cash)")
+            cash -= 30000
+            vehicles += 120000
+            debt += 90000
+            st.success("✅ Cash -$30k, Vehicles +$120k (Assets) | Debt +$90k (Liability)")
+        
+        if step >= 3:
+            st.markdown("#### Step 3: Buy Technology & Equipment")
+            st.info("You spend $25,000 cash on GPS systems, phones, and routing software")
+            cash -= 25000
+            equipment += 25000
+            st.success("✅ Cash -$25k, Equipment +$25k (Assets) | No change on other side")
+        
+        if step >= 4:
+            st.markdown("#### Step 4: Sign Corporate Contracts")
+            st.info("You land contracts with businesses worth $45,000, payment in 30 days")
+            receivables += 45000
+            equity += 45000  # Revenue increases equity
+            st.success("✅ Receivables +$45k (Asset) | Equity +$45k (profit increases equity)")
+        
+        if step >= 5:
+            st.markdown("#### Step 5: Buy Fuel on Credit")
+            st.info("You purchase $8,000 worth of fuel from supplier, payment due next month")
+            equipment += 8000  # Fuel is a supply/expense but shown as equipment for simplicity
+            payables += 8000
+            st.success("✅ Equipment +$8k (Asset) | Payables +$8k (Liability)")
+        
+        if step >= 6:
+            st.markdown("#### Step 6: Collect Payment & Pay Loan")
+            st.info("Customers pay you $45k, and you use $20k to pay down the auto loan")
+            cash += 45000  # Collect receivables
+            receivables -= 45000
+            cash -= 20000  # Pay loan
+            debt -= 20000
+            st.success("✅ Cash +$45k, Receivables -$45k; then Cash -$20k (Assets) | Debt -$20k (Liability)")
+        
+        # Show current balance sheet
+        st.markdown("---")
+        st.markdown("### 📊 Current Balance Sheet")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### ASSETS")
+            st.write(f"Cash: {format_currency(cash)}")
+            st.write(f"Vehicles: {format_currency(vehicles)}")
+            st.write(f"Equipment: {format_currency(equipment)}")
+            st.write(f"Receivables: {format_currency(receivables)}")
+            total_assets_delivery = cash + vehicles + equipment + receivables
+            st.markdown(f"**Total Assets: {format_currency(total_assets_delivery)}**")
+        
+        with col2:
+            st.markdown("#### LIABILITIES + EQUITY")
+            st.write(f"Auto Loan: {format_currency(debt)}")
+            st.write(f"Payables: {format_currency(payables)}")
+            st.write(f"Equity: {format_currency(equity)}")
+            total_le_delivery = debt + payables + equity
+            st.markdown(f"**Total L+E: {format_currency(total_le_delivery)}**")
+        
+        if check_balance(total_assets_delivery, debt + payables, equity):
+            st.success("✅ Balance Sheet is BALANCED!")
+        
+        # Visualization
+        fig = go.Figure(data=[
+            go.Bar(name='Assets', x=['Cash', 'Vehicles', 'Equipment', 'Receivables'], 
+                   y=[cash, vehicles, equipment, receivables], marker_color='lightgreen'),
+            go.Bar(name='Liabilities', x=['Auto Loan', 'Payables'], 
+                   y=[debt, payables], marker_color='lightcoral'),
+            go.Bar(name='Equity', x=['Equity'], y=[equity], marker_color='lightyellow')
+        ])
+        fig.update_layout(title='Balance Sheet Breakdown', barmode='group', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    elif "Tech Startup" in scenario:
+        st.markdown("### 💻 Launching a Tech Startup: Step-by-Step")
+        
+        step = st.slider("Follow the journey:", 1, 6, 1)
+        
+        # Initialize values
+        cash = 0
+        equipment = 0
+        intangibles = 0
+        receivables = 0
+        debt = 0
+        equity = 0
+        payables = 0
+        
+        if step >= 1:
+            st.markdown("#### Step 1: Seed Funding")
+            st.info("You raise $500,000 from angel investors in exchange for 25% equity")
+            cash += 500000
+            equity += 500000
+            st.success("✅ Cash +$500k (Asset) | Equity +$500k")
+        
+        if step >= 2:
+            st.markdown("#### Step 2: Buy Computers & Office Equipment")
+            st.info("You spend $80,000 cash on laptops, servers, and office furniture")
+            cash -= 80000
+            equipment += 80000
+            st.success("✅ Cash -$80k, Equipment +$80k (Assets) | No change on other side")
+        
+        if step >= 3:
+            st.markdown("#### Step 3: Develop & Patent Software")
+            st.info("You spend $120,000 developing software and securing patents")
+            cash -= 120000
+            intangibles += 120000  # Software & patents are intangible assets
+            st.success("✅ Cash -$120k, Intangibles +$120k (Assets) | No change on other side")
+        
+        if step >= 4:
+            st.markdown("#### Step 4: Sign SaaS Contracts")
+            st.info("You sign annual contracts worth $200,000, customers will pay quarterly")
+            receivables += 200000
+            equity += 200000  # Revenue increases equity
+            st.success("✅ Receivables +$200k (Asset) | Equity +$200k (profit increases equity)")
+        
+        if step >= 5:
+            st.markdown("#### Step 5: Take Strategic Loan")
+            st.info("You secure a $150,000 venture debt loan for expansion")
+            cash += 150000
+            debt += 150000
+            st.success("✅ Cash +$150k (Asset) | Debt +$150k (Liability)")
+        
+        if step >= 6:
+            st.markdown("#### Step 6: Collect Revenue & Pay Expenses")
+            st.info("You collect $50k from customers and owe $30k in cloud hosting bills")
+            cash += 50000  # Collect receivables
+            receivables -= 50000
+            payables += 30000
+            st.success("✅ Cash +$50k, Receivables -$50k (Assets) | Payables +$30k (Liability)")
+        
+        # Show current balance sheet
+        st.markdown("---")
+        st.markdown("### 📊 Current Balance Sheet")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### ASSETS")
+            st.write(f"Cash: {format_currency(cash)}")
+            st.write(f"Equipment: {format_currency(equipment)}")
+            st.write(f"Intangibles (Software/Patents): {format_currency(intangibles)}")
+            st.write(f"Receivables: {format_currency(receivables)}")
+            total_assets_tech = cash + equipment + intangibles + receivables
+            st.markdown(f"**Total Assets: {format_currency(total_assets_tech)}**")
+        
+        with col2:
+            st.markdown("#### LIABILITIES + EQUITY")
+            st.write(f"Venture Debt: {format_currency(debt)}")
+            st.write(f"Payables: {format_currency(payables)}")
+            st.write(f"Equity: {format_currency(equity)}")
+            total_le_tech = debt + payables + equity
+            st.markdown(f"**Total L+E: {format_currency(total_le_tech)}**")
+        
+        if check_balance(total_assets_tech, debt + payables, equity):
+            st.success("✅ Balance Sheet is BALANCED!")
+        
+        # Visualization
+        fig = go.Figure(data=[
+            go.Bar(name='Assets', x=['Cash', 'Equipment', 'Intangibles', 'Receivables'], 
+                   y=[cash, equipment, intangibles, receivables], marker_color='lightgreen'),
+            go.Bar(name='Liabilities', x=['Debt', 'Payables'], 
+                   y=[debt, payables], marker_color='lightcoral'),
+            go.Bar(name='Equity', x=['Equity'], y=[equity], marker_color='lightyellow')
+        ])
+        fig.update_layout(title='Balance Sheet Breakdown', barmode='group', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    elif "Retail Store" in scenario:
+        st.markdown("### 🏪 Opening a Retail Store: Step-by-Step")
+        
+        step = st.slider("Follow the journey:", 1, 6, 1)
+        
+        # Initialize values
+        cash = 0
+        inventory = 0
+        equipment = 0
+        receivables = 0
+        debt = 0
+        equity = 0
+        payables = 0
+        
+        if step >= 1:
+            st.markdown("#### Step 1: Initial Investment")
+            st.info("You invest $250,000 of your own money to open the retail store")
+            cash += 250000
+            equity += 250000
+            st.success("✅ Cash +$250k (Asset) | Equity +$250k")
+        
+        if step >= 2:
+            st.markdown("#### Step 2: Lease & Furnish Store")
+            st.info("You pay $50,000 cash for store fixtures, shelving, and POS system")
+            cash -= 50000
+            equipment += 50000
+            st.success("✅ Cash -$50k, Equipment +$50k (Assets) | No change on other side")
+        
+        if step >= 3:
+            st.markdown("#### Step 3: Buy Inventory on Credit")
+            st.info("You purchase $180,000 worth of merchandise from suppliers on 60-day terms")
+            inventory += 180000
+            payables += 180000
+            st.success("✅ Inventory +$180k (Asset) | Payables +$180k (Liability)")
+        
+        if step >= 4:
+            st.markdown("#### Step 4: Make Cash & Credit Sales")
+            st.info("Grand opening! You sell $80k worth of goods ($50k cash, $30k on store credit)")
+            cash += 50000
+            receivables += 30000
+            inventory -= 40000  # Cost of goods sold (50% markup)
+            equity += 40000  # Profit from sales (80k revenue - 40k cost)
+            st.success("✅ Cash +$50k, Receivables +$30k, Inventory -$40k (Assets) | Equity +$40k")
+        
+        if step >= 5:
+            st.markdown("#### Step 5: Secure Business Line of Credit")
+            st.info("You establish a $100,000 line of credit and draw $60,000 for working capital")
+            cash += 60000
+            debt += 60000
+            st.success("✅ Cash +$60k (Asset) | Debt +$60k (Liability)")
+        
+        if step >= 6:
+            st.markdown("#### Step 6: Pay Suppliers & Restock")
+            st.info("You pay $100k to suppliers and buy $70k more inventory with cash")
+            cash -= 100000  # Pay suppliers
+            payables -= 100000
+            cash -= 70000  # Buy inventory
+            inventory += 70000
+            st.success("✅ Cash -$170k, Inventory +$70k (Assets) | Payables -$100k (Liability)")
+        
+        # Show current balance sheet
+        st.markdown("---")
+        st.markdown("### 📊 Current Balance Sheet")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### ASSETS")
+            st.write(f"Cash: {format_currency(cash)}")
+            st.write(f"Inventory: {format_currency(inventory)}")
+            st.write(f"Equipment: {format_currency(equipment)}")
+            st.write(f"Receivables: {format_currency(receivables)}")
+            total_assets_retail = cash + inventory + equipment + receivables
+            st.markdown(f"**Total Assets: {format_currency(total_assets_retail)}**")
+        
+        with col2:
+            st.markdown("#### LIABILITIES + EQUITY")
+            st.write(f"Line of Credit: {format_currency(debt)}")
+            st.write(f"Payables: {format_currency(payables)}")
+            st.write(f"Equity: {format_currency(equity)}")
+            total_le_retail = debt + payables + equity
+            st.markdown(f"**Total L+E: {format_currency(total_le_retail)}**")
+        
+        if check_balance(total_assets_retail, debt + payables, equity):
+            st.success("✅ Balance Sheet is BALANCED!")
+        
+        # Visualization
+        fig = go.Figure(data=[
+            go.Bar(name='Assets', x=['Cash', 'Inventory', 'Equipment', 'Receivables'], 
+                   y=[cash, inventory, equipment, receivables], marker_color='lightgreen'),
+            go.Bar(name='Liabilities', x=['Line of Credit', 'Payables'], 
+                   y=[debt, payables], marker_color='lightcoral'),
+            go.Bar(name='Equity', x=['Equity'], y=[equity], marker_color='lightyellow')
+        ])
+        fig.update_layout(title='Balance Sheet Breakdown', barmode='group', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+
 
 # Educational Footer
 st.markdown("---")
