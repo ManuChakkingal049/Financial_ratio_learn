@@ -312,14 +312,15 @@ elif "Challenge Mode" in mode:
             </div>
             """, unsafe_allow_html=True)
             
-            # Pre-filled values (unbalanced)
-            cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c1_cash")
-            inventory_c = st.number_input("Inventory", value=200000.0, step=5000.0, key="c1_inv")
+            # Pre-filled values (unbalanced - missing equipment)
+            cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c1_cash", disabled=True,
+                                     help="This already reflects the $100k spent on equipment")
+            inventory_c = st.number_input("Inventory", value=200000.0, step=5000.0, key="c1_inv", disabled=True)
             ppe_c = st.number_input("⭐ Equipment (Fix this!)", value=0.0, step=5000.0, key="c1_ppe", 
                                    help="Hint: They bought $100k worth of equipment!")
             
-            liabilities_c = st.number_input("Total Liabilities", value=100000.0, step=5000.0, key="c1_liab")
-            equity_c = st.number_input("Total Equity", value=200000.0, step=5000.0, key="c1_eq")
+            liabilities_c = st.number_input("Total Liabilities", value=100000.0, step=5000.0, key="c1_liab", disabled=True)
+            equity_c = st.number_input("Total Equity", value=200000.0, step=5000.0, key="c1_eq", disabled=True)
             
             total_assets_c = cash_c + inventory_c + ppe_c
             total_liab_eq_c = liabilities_c + equity_c
@@ -343,13 +344,13 @@ elif "Challenge Mode" in mode:
             </div>
             """, unsafe_allow_html=True)
             
-            cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c2_cash")
-            inventory_c = st.number_input("Inventory", value=400000.0, step=5000.0, key="c2_inv", 
+            cash_c = st.number_input("Cash", value=100000.0, step=5000.0, key="c2_cash", disabled=True)
+            inventory_c = st.number_input("Inventory", value=400000.0, step=5000.0, key="c2_inv", disabled=True,
                                          help="This includes the $150k worth they bought with the loan")
             
             liabilities_c = st.number_input("⭐ Total Liabilities (Fix this!)", value=200000.0, step=5000.0, key="c2_liab",
                                            help="Hint: They took a $150k loan!")
-            equity_c = st.number_input("Total Equity", value=300000.0, step=5000.0, key="c2_eq")
+            equity_c = st.number_input("Total Equity", value=300000.0, step=5000.0, key="c2_eq", disabled=True)
             
             total_assets_c = cash_c + inventory_c
             total_liab_eq_c = liabilities_c + equity_c
@@ -373,11 +374,11 @@ elif "Challenge Mode" in mode:
             </div>
             """, unsafe_allow_html=True)
             
-            cash_c = st.number_input("Cash", value=280000.0, step=5000.0, key="c3_cash",
+            cash_c = st.number_input("Cash", value=280000.0, step=5000.0, key="c3_cash", disabled=True,
                                     help="This includes the $80k investment")
-            inventory_c = st.number_input("Inventory", value=120000.0, step=5000.0, key="c3_inv")
+            inventory_c = st.number_input("Inventory", value=120000.0, step=5000.0, key="c3_inv", disabled=True)
             
-            liabilities_c = st.number_input("Total Liabilities", value=150000.0, step=5000.0, key="c3_liab")
+            liabilities_c = st.number_input("Total Liabilities", value=150000.0, step=5000.0, key="c3_liab", disabled=True)
             equity_c = st.number_input("⭐ Total Equity (Fix this!)", value=170000.0, step=5000.0, key="c3_eq",
                                       help="Hint: The owner added $80k to their investment!")
             
@@ -405,11 +406,11 @@ elif "Challenge Mode" in mode:
             
             cash_c = st.number_input("⭐ Cash (Fix this!)", value=250000.0, step=5000.0, key="c4_cash",
                                     help="Hint: They paid $60k in cash to reduce debt!")
-            inventory_c = st.number_input("Inventory", value=150000.0, step=5000.0, key="c4_inv")
+            inventory_c = st.number_input("Inventory", value=150000.0, step=5000.0, key="c4_inv", disabled=True)
             
-            liabilities_c = st.number_input("Total Liabilities", value=140000.0, step=5000.0, key="c4_liab",
+            liabilities_c = st.number_input("Total Liabilities", value=140000.0, step=5000.0, key="c4_liab", disabled=True,
                                            help="Already reduced by $60k")
-            equity_c = st.number_input("Total Equity", value=200000.0, step=5000.0, key="c4_eq")
+            equity_c = st.number_input("Total Equity", value=200000.0, step=5000.0, key="c4_eq", disabled=True)
             
             total_assets_c = cash_c + inventory_c
             total_liab_eq_c = liabilities_c + equity_c
@@ -431,6 +432,7 @@ elif "Challenge Mode" in mode:
             st.markdown("<h3 style='text-align: center;'>=</h3>", unsafe_allow_html=True)
         with col3:
             st.metric("Liabilities + Equity", format_currency(total_liab_eq_c))
+
 
 # ---------------------------
 # REAL-WORLD SCENARIOS
